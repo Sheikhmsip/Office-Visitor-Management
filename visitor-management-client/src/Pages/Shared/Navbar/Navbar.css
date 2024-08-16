@@ -1,0 +1,15 @@
+li:hover{
+    color: orange;
+    border: 1px solid white;
+    border-radius: 10px;
+    transform: scale(1.1);
+}
+li {
+    font-size: 18px ;
+    transition: all 700ms ease-in-out;
+    border-radius: 5px;
+}
+ul li{
+    margin-inline: 10px;
+    padding-inline: 5px;
+}
