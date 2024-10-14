@@ -34,7 +34,7 @@ console.log(visitors)
                         <td>{visitors.phone}</td>
                         <td>{visitors.location}</td>
                         <td>{visitors.country}</td>
-                        <td>{visitors.time}</td>
+                        <td>{visitors.time}/ {visitors.date? visitors.date : ""}</td>
                         <td>{visitors.ref}</td>
                     </tr>
                 ))}

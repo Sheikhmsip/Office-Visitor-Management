@@ -1,24 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./AddVisitor.css"; // Optional: CSS to style your modal
 
-const AddVisitor = ({ isOpen, onClose, onSubmit }) => {
+const AddVisitor = ({ isOpen, onClose, onSubmit, lastSerialNumber }) => {
+  // State to hold visitor data
   const [visitor, setVisitor] = useState({
-    serialNo: "",
     name: "",
     phone: "",
     location: "",
     country: "",
-    refPage: "",
+    ref: "",
   });
 
+  // Function to handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setVisitor((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(visitor);
+    
+    // Automatically generate serial number, date, and time
+    const serialNo = lastSerialNumber + 1; // Increment the last serial number by 1
+    const date = new Date().toLocaleDateString(); // Current date
+    const time = new Date().toLocaleTimeString(); // Current time
+
+    // Include these fields in the visitor data
+    const visitorWithAutoFields = {
+      ...visitor,
+      serialNo,
+      date,
+      time,
+    };
+
+    // Submit the form data
+    onSubmit(visitorWithAutoFields);
     onClose(); // Close the modal after submission
   };
 
@@ -29,17 +46,6 @@ const AddVisitor = ({ isOpen, onClose, onSubmit }) => {
       <div className="modal-content">
         <h2 className="text-xl font-bold mb-4">Add Visitor</h2>
         <form onSubmit={handleSubmit}>
-          <div>
-            <label>Serial No</label>
-            <input
-              type="text"
-              name="serialNo"
-              value={visitor.serialNo}
-              onChange={handleChange}
-              className="input-field"
-              required
-            />
-          </div>
           <div>
             <label>Name</label>
             <input
@@ -88,8 +94,8 @@ const AddVisitor = ({ isOpen, onClose, onSubmit }) => {
             <label>Ref/Page</label>
             <input
               type="text"
-              name="refPage"
-              value={visitor.refPage}
+              name="ref"
+              value={visitor.ref}
               onChange={handleChange}
               className="input-field"
               required
