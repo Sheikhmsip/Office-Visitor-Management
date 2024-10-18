@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Visitor.css";
 import VisitorTable from "./VisitorTable";
 import AddVisitor from "../AddVisitor/AddVisitor";
+import toast from "react-hot-toast";
 
 const Visitor = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,7 +57,7 @@ const Visitor = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Visitor added successfully:", data);
+        // console.log("Visitor added successfully:", data);
 
         // Update the visitor list with the newly added visitor
         setVisitors((prevVisitors) => [...prevVisitors, data]);
@@ -65,15 +66,18 @@ const Visitor = () => {
         setLastSerialNumber(data.serialNo);
 
         // Show success message and close modal
-        alert("Visitor added successfully!");
+        // alert("Visitor added successfully!");
+        toast.success("Visitor added successfully!");
         setIsModalOpen(false);
       } else {
         console.error("Error adding visitor:", response.statusText);
-        alert("Error adding visitor! Please try again.");
+        // alert("Error adding visitor! Please try again.");
+        toast.error("Did not add visitor! Please try again.")
       }
     } catch (error) {
-      console.error("Network error:", error);
-      alert("Network error. Please check your connection and try again.");
+      // console.error("Network error:", error);
+      // alert("Network error. Please check your connection and try again.");
+      toast.error("Network error. Please check your connection and try again.")
     }
   };
 
