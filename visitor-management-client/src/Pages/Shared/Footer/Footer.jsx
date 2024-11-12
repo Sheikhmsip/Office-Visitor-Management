@@ -3,26 +3,21 @@ import logo from "./../../../assets/logo 2.png";
 
 const Footer = () => {
   return (
-    <footer className="">
-      <div className="grid sm:grid-cols-2 md:grid-cols-2 content-start lg:grid-cols-2 mx-auto gap-10  justify-center  bg-gradient-to-r from-black via-blue-950 to-purple-950 text-[#dcc63b] p-10 w-full">
+      <div className="grid sm:grid-cols-2 md:grid-cols-2 content-start lg:grid-cols-2 mx-auto gap-8 justify-center  bg-gradient-to-r from-black via-blue-950 to-purple-950 text-[#dcc63b] p-10 ">
         
         {/* Logo and description */}
-        <div className="col-span-2 justify-self-start pl-10 ml-5 lg:col-span-1">
-          <aside className=" justify-between">
-            <div className="">
-              <img src={logo} width="200" height="200" alt="Logo" />
-            </div>
-            <div className="">
+        <div className="col-span-2 justify-self-start md:ml-5 ml-0 lg:col-span-1">
+              <img className="mx-auto" src={logo} width="200" height="200" alt="Logo" />
+            <div className="text-center ">
             <p>Sky Dream Providing reliable services since 2009</p>
               <p>
                 All rights reserved by Sky Dream ©2024
               </p>
             </div>
-          </aside>
         </div>
 
         {/* Links section (Services, Company, Legal, Social Media) */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 justify-center content-center gap-16   ">
+        <div className="grid grid-cols-2  lg:grid-cols-4  content-center gap-16 md:gap-0">
           
           {/* Services */}
           <div className="grid ">
@@ -62,7 +57,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
+   
   );
 };
 
