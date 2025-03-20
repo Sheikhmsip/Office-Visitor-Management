@@ -28,8 +28,8 @@ console.log(visitors)
         </thead>
         <tbody>
           {visitors.map(visitors => (
-                    <tr key={visitors.serial}>
-                        <td>{visitors.serial}</td>
+                    <tr key={visitors._id}>
+                        <td>{visitors.serialNo}</td>
                         <td>{visitors.name}</td>
                         <td>{visitors.phone}</td>
                         <td>{visitors.location}</td>

@@ -7,7 +7,7 @@ const Banner = () => {
     <div className="w-[96%] bg-slate-900 opacity-90 mx-auto grid md:grid-cols-2 justify-center justify-items-center rounded-lg pt-4 md:pt-0">
       <div className="content-center text-2xl px-5 font-bold text-justify text-[#DBD29A]">
         "At
-        <span className="text-5xl text-orange-300 font-bold"> Sky Dream</span>,
+        <span className="text-5xl title-text font-bold"> Sky Dream</span>,
         we specialize in turning your aspirations into reality by providing
         expert consultancy for European, American, and global work permits,
         student visas, and visit visas. Trust us to concrete your dream and
