@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
-import "./AddVisitor.css"; // Optional: CSS to style your modal
+import React, { useState } from "react";
+import "./AddVisitor.css"; // Optional CSS file
 
-const AddVisitor = ({ isOpen, onClose, onSubmit, lastSerialNumber }) => {
-  // State to hold visitor data
+const AddVisitor = ({ isOpen, onClose, onSubmit }) => {
   const [visitor, setVisitor] = useState({
     name: "",
     phone: "",
@@ -11,35 +10,27 @@ const AddVisitor = ({ isOpen, onClose, onSubmit, lastSerialNumber }) => {
     ref: "",
   });
 
-  // Function to handle form input changes
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setVisitor((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Function to handle form submission
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Automatically generate serial number, date, and time
-    const serialNo = lastSerialNumber + 1; // Increment the last serial number by 1
-    const date = new Date().toLocaleDateString(); // Current date
-    const time = new Date().toLocaleTimeString(); // Current time
 
-    // Include these fields in the visitor data
-    const visitorWithAutoFields = {
-      ...visitor,
-      serialNo,
-      date,
-      time,
-    };
+    // Auto-generate date & time
+    const date = new Date().toLocaleDateString();
+    const time = new Date().toLocaleTimeString();
 
-    // Submit the form data
+    const visitorWithAutoFields = { ...visitor, date, time };
+
     onSubmit(visitorWithAutoFields);
-    onClose(); // Close the modal after submission
+    setVisitor({ name: "", phone: "", location: "", country: "", ref: "" }); // Reset form
   };
 
-  if (!isOpen) return null; // Don't render modal if isOpen is false
+  if (!isOpen) return null; // Don't render if modal is closed
 
   return (
     <div className="modal-overlay">
@@ -48,58 +39,23 @@ const AddVisitor = ({ isOpen, onClose, onSubmit, lastSerialNumber }) => {
         <form onSubmit={handleSubmit}>
           <div>
             <label>Name</label>
-            <input
-              type="text"
-              name="name"
-              value={visitor.name}
-              onChange={handleChange}
-              className="input-field"
-              required
-            />
+            <input type="text" name="name" value={visitor.name} onChange={handleChange} className="input-field" required />
           </div>
           <div>
             <label>Phone</label>
-            <input
-              type="text"
-              name="phone"
-              value={visitor.phone}
-              onChange={handleChange}
-              className="input-field"
-              required
-            />
+            <input type="text" name="phone" value={visitor.phone} onChange={handleChange} className="input-field" required />
           </div>
           <div>
             <label>Location</label>
-            <input
-              type="text"
-              name="location"
-              value={visitor.location}
-              onChange={handleChange}
-              className="input-field"
-              required
-            />
+            <input type="text" name="location" value={visitor.location} onChange={handleChange} className="input-field" required />
           </div>
           <div>
             <label>Country</label>
-            <input
-              type="text"
-              name="country"
-              value={visitor.country}
-              onChange={handleChange}
-              className="input-field"
-              required
-            />
+            <input type="text" name="country" value={visitor.country} onChange={handleChange} className="input-field" required />
           </div>
           <div>
             <label>Ref/Page</label>
-            <input
-              type="text"
-              name="ref"
-              value={visitor.ref}
-              onChange={handleChange}
-              className="input-field"
-              required
-            />
+            <input type="text" name="ref" value={visitor.ref} onChange={handleChange} className="input-field" required />
           </div>
           <div className="modal-buttons">
             <button type="button" onClick={onClose} className="cancel-btn">

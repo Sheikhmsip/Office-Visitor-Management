@@ -6,33 +6,29 @@ import toast from "react-hot-toast";
 
 const Visitor = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [visitors, setVisitors] = useState([]); // State to store visitor list
-  const [lastSerialNumber, setLastSerialNumber] = useState(0); // State to track last serial number
+  const [visitors, setVisitors] = useState([]); // Store visitor list
+  const [searchQuery, setSearchQuery] = useState(""); // Store search query
 
-  // Function to open the modal
+  // Function to open the add visitor modal
   const handleAddVisitorClick = () => {
     setIsModalOpen(true);
   };
 
-  // Function to close the modal
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  // Fetch the list of visitors on component mount to determine the last serial number
+  // Fetch the list of visitors on component mount
   useEffect(() => {
     const fetchVisitors = async () => {
       try {
         const response = await fetch("http://localhost:3000/visitors");
         if (response.ok) {
           const data = await response.json();
-          setVisitors(data);
 
-          // Determine the last serial number by finding the highest serial number in the list
-          if (data.length > 0) {
-            const lastVisitor = data[data.length - 1]; // Get the last visitor in the list
-            setLastSerialNumber(lastVisitor.serial); // Set the last serial number
-          }
+          // Assign serial numbers dynamically
+          // const updatedVisitors = data.map((visitor, index) => ({
+          //   ...visitor,
+          //   serialNo: index + 1, // Assign based on index
+          // }));
+
+          setVisitors(data);
         } else {
           console.error("Error fetching visitors:", response.statusText);
         }
@@ -41,45 +37,49 @@ const Visitor = () => {
       }
     };
 
-    fetchVisitors(); // Call the function to fetch visitors
-  }, []); // Empty dependency array means this effect runs once when the component mounts
+    fetchVisitors();
+  }, []);
 
   // Function to handle the visitor form submission
   const handleSubmitVisitor = async (visitor) => {
     try {
-      const response = await fetch("http://localhost:3000/visitors", {
+      // Fetch existing visitors to determine the serial number dynamically
+      const response = await fetch("http://localhost:3000/visitors");
+      if (!response.ok) {
+        throw new Error("Failed to fetch visitors");
+      }
+      const visitorsData = await response.json();
+      const serialNo = visitorsData.length + 1; // Serial number based on index
+
+      // Add visitor with the computed serial number
+      const addResponse = await fetch("http://localhost:3000/visitors", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(visitor),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...visitor, serialNo }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        // console.log("Visitor added successfully:", data);
-
-        // Update the visitor list with the newly added visitor
-        setVisitors((prevVisitors) => [...prevVisitors, data]);
-
-        // Update the last serial number with the new visitor's serial number
-        setLastSerialNumber(data.serialNo);
-
-        // Show success message and close modal
-        // alert("Visitor added successfully!");
+      if (addResponse.ok) {
+        const data = await addResponse.json();
+        setVisitors((prevVisitors) => [...prevVisitors, data]); // Update state
         toast.success("Visitor added successfully!");
         setIsModalOpen(false);
       } else {
-        console.error("Error adding visitor:", response.statusText);
-        // alert("Error adding visitor! Please try again.");
-        toast.error("Did not add visitor! Please try again.")
+        toast.error("Failed to add visitor. Try again.");
       }
     } catch (error) {
-      // console.error("Network error:", error);
-      // alert("Network error. Please check your connection and try again.");
-      toast.error("Network error. Please check your connection and try again.")
+      toast.error("Network error. Please check your connection.");
     }
   };
+
+  // Handle search query change
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  // Filter visitors based on search query
+  const filteredVisitors = visitors.filter((visitor) =>
+    visitor.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="bg">
@@ -87,29 +87,55 @@ const Visitor = () => {
         Visitor List
       </h1>
 
-      <div className="w-[95%] mx-auto grid grid-cols-2 text-white">
-        <p className="justify-self-start border border-red-800">
-          Search Visitor
-        </p>
+      <div className="w-[95%] mx-auto grid grid-cols-2 items-center">
+
+        {/* Visitor Search By Name Input filed */}
+        <div className="w-full max-w-sm min-w-[200px] ">
+          <div className="relative flex items-center w-[80%]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="absolute w-5 h-5 top-2.5 left-2.5 text-slate-600"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                clipRule="evenodd"
+              />
+            </svg>
+
+            <input
+              className="w-full bg-transparent placeholder:text-slate-400 placeholder:hover:text-slate-800 text-slate-700 text-sm border border-slate-800 rounded-md pl-10 pr-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-200 hover:border-slate-300 hover:bg-white shadow-sm focus:shadow"
+              type="text"
+              placeholder="Search Visitor by name"
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+          </div>
+        </div>
+
+        {/* Add a new visitor button */}
         <p
-          className="justify-self-end border border-red-800 cursor-pointer"
+          type="button"
+          className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 justify-self-end cursor-pointer p-2"
           onClick={handleAddVisitorClick}
         >
           Add Visitor
         </p>
       </div>
 
-      {/* Visitor Table */}
+      {/* Visitor Table with filtered visitors */}
       <div>
-        <VisitorTable visitors={visitors} />
+        <VisitorTable visitors={filteredVisitors} />
       </div>
 
       {/* Modal */}
       <AddVisitor
         isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmitVisitor}
-        lastSerialNumber={lastSerialNumber} // Pass lastSerialNumber to the modal
+        visitors={visitors} // Pass visitor list
       />
     </div>
   );

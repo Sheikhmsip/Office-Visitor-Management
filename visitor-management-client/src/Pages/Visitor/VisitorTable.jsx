@@ -1,17 +1,6 @@
-import React, { useEffect, useState } from "react";
-// import data from "../../assets/demo/visitos.json"
+import React from "react";
 
-const VisitorTable = () => {
-  const [visitors, setVisitors] = useState([]);
-
-  useEffect(() => {
-    fetch('https://visitor-management-tjb5o8r1s-sheikhmsips-projects.vercel.app/visitors')
-    .then(res => res.json())
-    .then(data => setVisitors(data))
-    .catch(error => console.error('Error loading JSON:', error));
-    
-  }, []);
-console.log(visitors)
+const VisitorTable = ({ visitors }) => {
   return (
     <div className="overflow-x-auto text-white">
       <table className="table table-xs">
@@ -27,17 +16,17 @@ console.log(visitors)
           </tr>
         </thead>
         <tbody>
-          {visitors.map(visitors => (
-                    <tr key={visitors._id}>
-                        <td>{visitors.serialNo}</td>
-                        <td>{visitors.name}</td>
-                        <td>{visitors.phone}</td>
-                        <td>{visitors.location}</td>
-                        <td>{visitors.country}</td>
-                        <td>{visitors.time}/ {visitors.date? visitors.date : ""}</td>
-                        <td>{visitors.ref}</td>
-                    </tr>
-                ))}
+          {visitors.map(visitor => (
+            <tr key={visitor._id}>
+              <td>{visitor.serialNo}</td>
+              <td>{visitor.name}</td>
+              <td>{visitor.phone}</td>
+              <td>{visitor.location}</td>
+              <td>{visitor.country}</td>
+              <td>{visitor.time} / {visitor.date}</td>
+              <td>{visitor.ref}</td>
+            </tr>
+          ))}
         </tbody>
         <tfoot>
           <tr>
